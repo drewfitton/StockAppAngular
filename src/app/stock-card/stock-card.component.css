@@ -1,0 +1,64 @@
+.stock-card {
+    width: 100%;
+    height: 100%;
+    background-color: #444; /* slight contrast from page */
+    border-radius: 1rem; /* nicely rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* subtle soft shadow */
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+    padding: 1rem;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .stock-card:hover {
+    transform: scale(1.02); /* slight zoom on hover */ 
+  }
+  
+  .stock-chart {
+    width: 100%;
+    height: 100%;
+  }
+  
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 1rem; /* optional if you want canvas to also have rounded edges */
+  }
+  
+  h1 {
+    color: white;
+    size: 2rem;
+  }
+
+  div .row {
+    margin: 0;
+    padding: 0.1rem;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  div .stock-card-header {
+    display: flex;
+    justify-content: center;
+    align-items: left;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    gap: 0.25rem;
+  }
+
+  img {
+    /* width: 50px; */
+    height: 2.25rem;
+    width: 2.25rem;
+    /* width: auto; */
+    object-fit: contain;
+    margin-right: 0.5rem;
+    border-radius: 20%;
+    background-color: white;
+  }

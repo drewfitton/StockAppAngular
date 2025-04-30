@@ -1,0 +1,48 @@
+<div class="stock-list-view">
+  <div class="header">
+    <h1>Stock Performance</h1>
+    <div class="selection-bar">
+      <div class="selection-section">
+        <p>Industry</p>
+        <div class="dropdown">
+          <button (click)="toggleDropdown()" [class.selected]="dropdownOpen">
+            {{ selectedCategory }}
+            <span class="arrow" [class.open]="dropdownOpen">&#9662;</span>
+          </button>
+          <div class="dropdown-menu" *ngIf="dropdownOpen">
+            <button 
+              *ngFor="let option of categoryOptions" 
+              (click)="onSelectCategory(option)"
+              [class.selected]="option === selectedCategory"
+            >
+              {{ option }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="selection-section">
+        <p>Time Range</p>
+        <div class="time-period-row">
+          @for(period of timePeriods; track period) {
+            <button 
+              [class.selected]="period === selectedPeriod"
+              (click)="onSelectPeriod(period)">
+              {{ period }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stock-list" *ngIf="stock_names">
+    <div class="stock-grid">
+      @for (stock of filtered_data; track stock.id) {
+        <app-stock-card
+        [date]="selectedDate"
+        [stockEntry]="stock">
+      </app-stock-card>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<div class="stock-details">
+    <h2>Stocks</h2>
+  
+    <form [formGroup]="stockForm" (ngSubmit)="onSubmit()">
+      <label>
+        Ticker:
+        <input type="text" formControlName="ticker" placeholder="e.g., AAPL">
+      </label>
+      @if (ticker?.invalid && (ticker?.touched || ticker?.dirty)) {
+        <div class="error">
+          Ticker is required
+        </div>
+      }
+  
+      <label>
+        Date:
+        <input type="date" formControlName="date">
+      </label>
+      @if (date?.invalid && (date?.touched || date?.dirty)) {
+        <div class="error">
+            Date is required
+        </div>
+        }
+  
+      <button type="submit" [disabled]="stockForm.invalid">Search</button>
+    </form>
+  
+    @if (stock_data) {
+        <div class="stock-chart">
+            <canvas baseChart
+                [data]="chartData"
+                [options]="chartOptions"
+                [type]="'line'">
+            </canvas>
+        </div>
+    }
+  </div>
+  

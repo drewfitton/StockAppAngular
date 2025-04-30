@@ -1,0 +1,26 @@
+<div class='stock-card'>
+    @if (stockEntry != null) {
+        <div class="stock-card-header">
+            <div class="row">
+                <h1>{{ stockEntry.ticker }}</h1>
+                <img src="{{stockEntry.img}}" alt=""/>
+            </div>
+            <div class="row">
+                <p>{{stockEntry.company}}</p>
+            @if (returns) {
+                <p [style.color]="returns > 0 ? 'green' : (returns < 0 ? 'red' : 'black')">
+                    {{ returns > 0 ? '+' + returns : returns }}%
+                </p>
+            }
+            </div>
+        </div>
+        <div class="stock-chart">
+            <canvas baseChart
+                [data]="chartData"
+                [options]="chartOptions"
+                [type]="'line'">
+            </canvas>
+        </div>
+    }
+</div>
+  
