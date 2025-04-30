@@ -101,18 +101,18 @@ export class StockListViewComponent { // implements OnInit {
     return Object.entries(this.stock_names).map(([key, name]) => ({ key, name }));
   }
 
-  // loadStockData(): void {
-  //   this.stockService.getStockData().subscribe({
-  //     next: (data: StockEntry[]) => {
-  //       this.stock_data = data;
-  //       this.filtered_data = data;
-  //       // console.log('Stock data:', this.stock_data[0]);
-  //     },
-  //     error: (error: string) => {
-  //       console.error('Error fetching stock data', error);
-  //     }
-  //   });
-  // }
+  loadStockData(ticker: string, date: string): void {
+    this.stockService.getStockData(ticker, date).subscribe({
+      next: (data: StockEntry[]) => {
+        this.stock_data = data;
+        this.filtered_data = data;
+        // console.log('Stock data:', this.stock_data[0]);
+      },
+      error: (error: string) => {
+        console.error('Error fetching stock data', error);
+      }
+    });
+  }
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;

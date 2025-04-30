@@ -41,7 +41,6 @@ export class StockCardComponent {
   @Output() stockSelected = new EventEmitter<StockEntry>();
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
   stockEntry: StockEntry | null = null;
-  returns: number | null = null;
 
   public chartData: ChartConfiguration<'line'>['data'] = {
     labels: [],
@@ -60,7 +59,11 @@ export class StockCardComponent {
   };
 
   private getBorderColor(): string {
-    return this.returns !== null && this.returns < 0 ? 'red' : 'green';
+    if (this.stockEntry) {
+      return this.stockEntry.returns !== null && this.stockEntry.returns < 0 ? 'red' : 'green';
+    } else {
+      return 'rgba(75,192,192,1)';
+    }
   }
   
   public chartOptions: ChartConfiguration<'line'>['options'] = {
@@ -76,12 +79,10 @@ export class StockCardComponent {
 
   ngOnInit() {
     this.loadData()
-    // console.log("Stock card data:", this.stockEntry);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['date'] && !changes['date'].firstChange) {
-      // console.log('Date input changed for', this.stockEntry!.ticker, 'to', this.date);
       this.loadData();
     }
   }
@@ -91,21 +92,11 @@ export class StockCardComponent {
     this.router.navigate(['/stock-details'], { queryParams: { stockName: stock.ticker } });
   }
 
-  // loadData() {
-  //   if (this.stockEntry) {
-  //     this.returns = Math.round(((this.stockEntry.adj_close[this.stockEntry.adj_close.length - 1] - this.stockEntry.adj_close[0]) / this.stockEntry.adj_close[0]) * 10000) / 100;
-  //     this.chartData.labels = this.stockEntry.date;
-  //     this.chartData.datasets[0].data = this.stockEntry.adj_close;
-  //     this.chartData.datasets[0].borderColor = this.getBorderColor();
-  //     this.chart?.update();
-  //   }
-  // }
   loadData() {
     if (this.ticker && this.date) {
       this.stockService.getStockData(this.ticker, this.date).subscribe({
         next: (data: StockEntry) => {
           this.stockEntry = data;
-          this.returns = Math.round(((data.adj_close[data.adj_close.length - 1] - data.adj_close[0]) / data.adj_close[0]) * 10000) / 100;
           this.chartData.labels = data.date;
           this.chartData.datasets[0].data = data.adj_close;
           this.chartData.datasets[0].borderColor = this.getBorderColor();

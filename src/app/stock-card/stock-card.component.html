@@ -7,9 +7,9 @@
             </div>
             <div class="row">
                 <p>{{stockEntry.company}}</p>
-            @if (returns) {
-                <p [style.color]="returns > 0 ? 'green' : (returns < 0 ? 'red' : 'black')">
-                    {{ returns > 0 ? '+' + returns : returns }}%
+            @if (stockEntry.returns) {
+                <p [style.color]="stockEntry.returns > 0 ? 'green' : (stockEntry.returns < 0 ? 'red' : 'black')">
+                    {{ stockEntry.returns > 0 ? '+' + stockEntry.returns : stockEntry.returns }}%
                 </p>
             }
             </div>
