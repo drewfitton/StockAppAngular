@@ -35,11 +35,12 @@ ChartJS.register(
   styleUrl: './stock-card.component.css'
 })
 export class StockCardComponent {
+  @Input() ticker: string | null = null;
   @Input() date: string | null = "2025-01-01";
-  @Input() stockEntry: StockEntry | null = null;
+  // @Input() stockEntry: StockEntry | null = null;
   @Output() stockSelected = new EventEmitter<StockEntry>();
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-  stock_entry: StockEntry | null = null;
+  stockEntry: StockEntry | null = null;
   returns: number | null = null;
 
   public chartData: ChartConfiguration<'line'>['data'] = {
@@ -100,36 +101,20 @@ export class StockCardComponent {
   //   }
   // }
   loadData() {
-    if (this.stockEntry && this.stockEntry.date.length > 0 && this.date) {
-      const dateIndex = this.stockEntry.date.findIndex(d => d >= this.date!);
-  
-      // If no date found (i.e., all dates are before the input), return early
-      if (dateIndex === -1) {
-        this.chartData.labels = [];
-        this.chartData.datasets[0].data = [];
-        this.returns = null;
-        this.chart?.update();
-        return;
-      }
-  
-      // Slice arrays from the found index onward
-      const filteredDates = this.stockEntry.date.slice(dateIndex);
-      const filteredAdjClose = this.stockEntry.adj_close.slice(dateIndex);
-  
-      // Calculate returns
-      if (filteredAdjClose.length > 1) {
-        this.returns = Math.round(((filteredAdjClose[filteredAdjClose.length - 1] - filteredAdjClose[0]) / filteredAdjClose[0]) * 10000) / 100;
-      } else {
-        this.returns = 0;
-      }
-      // console.log("dates:", filteredDates);
-      // console.log("close: ", filteredAdjClose)
-      // Update chart
-      this.chartData.labels = filteredDates;
-      this.chartData.datasets[0].data = filteredAdjClose;
-      this.chartData.datasets[0].borderColor = this.getBorderColor();
-      this.chart?.update();
+    if (this.ticker && this.date) {
+      this.stockService.getStockData(this.ticker, this.date).subscribe({
+        next: (data: StockEntry) => {
+          this.stockEntry = data;
+          this.returns = Math.round(((data.adj_close[data.adj_close.length - 1] - data.adj_close[0]) / data.adj_close[0]) * 10000) / 100;
+          this.chartData.labels = data.date;
+          this.chartData.datasets[0].data = data.adj_close;
+          this.chartData.datasets[0].borderColor = this.getBorderColor();
+          this.chart?.update();
+        },
+        error: (err: string) => {
+          console.error('Error fetching stock data:', err);
+        }
+      });
     }
   }
-
 }

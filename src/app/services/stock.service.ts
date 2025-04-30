@@ -19,15 +19,15 @@ export class StockService {
     return this.http.get<any[]>(url);
   }
 
-  getStockData() {
-    const url = `${this.baseUrl}/stock/data`;
-    return this.http.get<any>(url)
-  }
-  
-  // getStockData(ticker: string, date: string) {
-  //   const url = `${this.baseUrl}/stock/data/${ticker}+${date}`;
+  // getStockData() {
+  //   const url = `${this.baseUrl}/stock/data`;
   //   return this.http.get<any>(url)
   // }
+  
+  getStockData(ticker: string, date: string) {
+    const url = `${this.baseUrl}/stock/data/${ticker}+${date}`;
+    return this.http.get<any>(url)
+  }
 
 
 }

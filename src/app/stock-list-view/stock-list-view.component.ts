@@ -45,7 +45,7 @@ export class StockListViewComponent { // implements OnInit {
   stock_names: { [key: string]: string } = {};
   selectedDate: string  = '2025-01-01';
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-  timePeriods: string[] = ["5D", "1W", "1M", "6M", "YTD", "1Y", "5Y"];
+  timePeriods: string[] = ["5D", "1M", "6M", "YTD", "1Y", "5Y"];
   selectedPeriod: string = "YTD"; // Default selected, like "1 Month"
   categoryOptions = [
     'All', 'Tech', 'Finance', 'Healthcare',
@@ -78,7 +78,7 @@ export class StockListViewComponent { // implements OnInit {
   constructor(private fb: FormBuilder, private stockService: StockService, private route: ActivatedRoute, private router: Router) {}
   
   ngOnInit(): void {
-    this.loadStockData();
+    // this.loadStockData();
     this.loadStockNames();
   }
 
@@ -86,10 +86,10 @@ export class StockListViewComponent { // implements OnInit {
     this.stockService.getStockNames(this.selectedCategory).subscribe({
       next: (data: any) => {
         this.stock_names = data;
-        this.filtered_data = this.stock_data.filter(entry => {
-          return Object.keys(this.stock_names).includes(entry.ticker);
-        });
-        console.log('Stock names:', this.stock_names);
+        // this.filtered_data = this.stock_data.filter(entry => {
+        //   return Object.keys(this.stock_names).includes(entry.ticker);
+        // });
+        // console.log('Stock names:', this.stock_names);
       },
       error: (err: string) => {
         console.error('Error fetching stock names:', err);
@@ -97,18 +97,22 @@ export class StockListViewComponent { // implements OnInit {
     });
   }
 
-  loadStockData(): void {
-    this.stockService.getStockData().subscribe({
-      next: (data: StockEntry[]) => {
-        this.stock_data = data;
-        this.filtered_data = data;
-        // console.log('Stock data:', this.stock_data[0]);
-      },
-      error: (error: string) => {
-        console.error('Error fetching stock data:', error);
-      }
-    });
+  get stockList(): { key: string; name: string }[] {
+    return Object.entries(this.stock_names).map(([key, name]) => ({ key, name }));
   }
+
+  // loadStockData(): void {
+  //   this.stockService.getStockData().subscribe({
+  //     next: (data: StockEntry[]) => {
+  //       this.stock_data = data;
+  //       this.filtered_data = data;
+  //       // console.log('Stock data:', this.stock_data[0]);
+  //     },
+  //     error: (error: string) => {
+  //       console.error('Error fetching stock data', error);
+  //     }
+  //   });
+  // }
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;

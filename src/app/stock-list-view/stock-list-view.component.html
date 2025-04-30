@@ -37,11 +37,11 @@
 
   <div class="stock-list" *ngIf="stock_names">
     <div class="stock-grid">
-      @for (stock of filtered_data; track stock.id) {
+      @for (stock of stockList; track stock.key) {
         <app-stock-card
-        [date]="selectedDate"
-        [stockEntry]="stock">
-      </app-stock-card>
+          [ticker]="stock.key"
+          [date]="selectedDate">
+        </app-stock-card>
       }
     </div>
   </div>

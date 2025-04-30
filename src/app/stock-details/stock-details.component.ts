@@ -82,7 +82,7 @@ export class StockDetailsComponent {
   //   });
   // }
   loadData(ticker: string, date: string): void {
-    this.stockService.getStockData().subscribe({
+    this.stockService.getStockData(ticker, date).subscribe({
       next: (data: any) => {
         this.stock_data = data;
 
