@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -30,7 +31,7 @@ ChartJS.register(
 
 @Component({
   selector: 'app-stock-card',
-  imports: [BaseChartDirective],
+  imports: [CommonModule, BaseChartDirective],
   templateUrl: './stock-card.component.html',
   styleUrl: './stock-card.component.css'
 })
@@ -40,7 +41,7 @@ export class StockCardComponent {
   @Output() stockSelected = new EventEmitter<StockEntry>();
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
   stock_entry: StockEntry | null = null;
-  returns: number | null = null;
+  loadingChart = true; 
 
   public chartData: ChartConfiguration<'line'>['data'] = {
     labels: [],
@@ -59,7 +60,11 @@ export class StockCardComponent {
   };
 
   private getBorderColor(): string {
-    return this.returns !== null && this.returns < 0 ? 'red' : 'green';
+    if (this.stockEntry) {
+      return this.stockEntry.returns !== null && this.stockEntry.returns < 0 ? 'red' : 'green';
+    } else {
+      return 'rgba(75,192,192,1)'; // Default color
+    }
   }
   
   public chartOptions: ChartConfiguration<'line'>['options'] = {
@@ -89,46 +94,15 @@ export class StockCardComponent {
     this.stockSelected.emit(stock);
     this.router.navigate(['/stock-details'], { queryParams: { stockName: stock.ticker } });
   }
-
-  // loadData() {
-  //   if (this.stockEntry) {
-  //     this.returns = Math.round(((this.stockEntry.adj_close[this.stockEntry.adj_close.length - 1] - this.stockEntry.adj_close[0]) / this.stockEntry.adj_close[0]) * 10000) / 100;
-  //     this.chartData.labels = this.stockEntry.date;
-  //     this.chartData.datasets[0].data = this.stockEntry.adj_close;
-  //     this.chartData.datasets[0].borderColor = this.getBorderColor();
-  //     this.chart?.update();
-  //   }
-  // }
+  
   loadData() {
-    if (this.stockEntry && this.stockEntry.date.length > 0 && this.date) {
-      const dateIndex = this.stockEntry.date.findIndex(d => d >= this.date!);
-  
-      // If no date found (i.e., all dates are before the input), return early
-      if (dateIndex === -1) {
-        this.chartData.labels = [];
-        this.chartData.datasets[0].data = [];
-        this.returns = null;
-        this.chart?.update();
-        return;
-      }
-  
-      // Slice arrays from the found index onward
-      const filteredDates = this.stockEntry.date.slice(dateIndex);
-      const filteredAdjClose = this.stockEntry.adj_close.slice(dateIndex);
-  
-      // Calculate returns
-      if (filteredAdjClose.length > 1) {
-        this.returns = Math.round(((filteredAdjClose[filteredAdjClose.length - 1] - filteredAdjClose[0]) / filteredAdjClose[0]) * 10000) / 100;
-      } else {
-        this.returns = 0;
-      }
-      // console.log("dates:", filteredDates);
-      // console.log("close: ", filteredAdjClose)
-      // Update chart
-      this.chartData.labels = filteredDates;
-      this.chartData.datasets[0].data = filteredAdjClose;
+    if (this.stockEntry) {
+      this.loadingChart = true; // Set loading state to true before chart loads
+      this.chartData.labels = this.stockEntry.date;
+      this.chartData.datasets[0].data = this.stockEntry.adj_close;
       this.chartData.datasets[0].borderColor = this.getBorderColor();
       this.chart?.update();
+      this.loadingChart = false; 
     }
   }
 

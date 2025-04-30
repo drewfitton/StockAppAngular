@@ -4,10 +4,11 @@
     <div class="selection-bar">
       <div class="selection-section">
         <p>Industry</p>
-        <div class="dropdown">
+        <div class="dropdown" #dropdownRef>
           <button (click)="toggleDropdown()" [class.selected]="dropdownOpen">
             {{ selectedCategory }}
-            <span class="arrow" [class.open]="dropdownOpen">&#9662;</span>
+            <span class="arrow" [class.open]="dropdownOpen" [innerHTML]="dropdownOpen ? '&#9662;' : '&#9656;'"></span>
+
           </button>
           <div class="dropdown-menu" *ngIf="dropdownOpen">
             <button 
@@ -34,15 +35,37 @@
       </div>
     </div>
   </div>
-
-  <div class="stock-list" *ngIf="stock_names">
-    <div class="stock-grid">
-      @for (stock of filtered_data; track stock.id) {
-        <app-stock-card
-        [date]="selectedDate"
-        [stockEntry]="stock">
-      </app-stock-card>
-      }
+  @if(loading) { 
+    <div class="loading-spinner">
+      <img class='loading-gif' src="loading.gif" alt="Loading..." />
     </div>
+  } @else {
+    <div class="stock-list" *ngIf="stock_names">
+      <div class="stock-grid">
+        @for (stock of paginatedStocks; track stock.id) {
+          <app-stock-card
+          [date]="selectedDate"
+          [stockEntry]="stock">
+        </app-stock-card>
+        }
+      </div>
+    </div>
+  }
+  <div class="pagination-controls">
+    <button (click) = "firstPage()" [disabled]="currentPage === 0" class="pagination-button">
+      First Page
+    </button>
+    <button (click)="prevPage()" [disabled]="currentPage === 0" class="pagination-button">
+      <img src="rightarrow.png" alt="Previous" class="arrow-icon" />
+    </button>
+    <span class="pagination-text">Page {{ currentPage + 1 }}</span>
+    <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= totalStocks" class="pagination-button">
+      <img src="leftarrow.png" alt="Next" class="arrow-icon" />
+    </button>
+    <button (click)="lastPage()" [disabled]="(currentPage + 1) * pageSize >= totalStocks" class="pagination-button">
+      Last Page
+    </button>
   </div>
+  
+  
 </div>
