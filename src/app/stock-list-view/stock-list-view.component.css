@@ -156,5 +156,60 @@
 }
 
 .arrow.open {
-  transform: rotate(180deg); /* Arrow points up when open */
+  color: black; /* Arrow points up when open */
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pagination-button {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination-button:hover {
+  background-color: #777;
+}
+
+.pagination-button:disabled {
+  background-color: #333;
+  cursor: not-allowed;
+}
+
+.pagination-text {
+  font-size: 1rem;
+  color: white;
+}
+
+.arrow-icon {
+  filter: invert(1);
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.loading-spinner {
+  margin-top: 6rem; /* Adjust this value to match the height of your header */
+  min-height: calc(100vh - 15rem); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.loading-gif {
+  width: 10%;
+  height: 10%;
 }

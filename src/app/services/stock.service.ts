@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, tap } from 'rxjs/operators';
 import { StockEntry } from '../models/stock-entry.model';
+import { Observable } from 'rxjs';
+import { PaginatedStockResponse } from '../paginated-stock-response';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +24,23 @@ export class StockService {
   getStockData() {
     const url = `${this.baseUrl}/stock/data`;
     return this.http.get<any>(url)
+  }
+  
+  getPaginatedStocks(
+    category: string,
+    period: string,
+    offset: number,
+    limit: number,
+    sort: string = 'returns_desc'
+  ): Observable<PaginatedStockResponse> {
+    const params = new HttpParams()
+      .set('category', category)
+      .set('period', period)
+      .set('offset', offset)
+      .set('limit', limit)
+      .set('sort', sort);
+  
+    return this.http.get<PaginatedStockResponse>(`${this.baseUrl}/stock/data/`, { params });
   }
   
   // getStockData(ticker: string, date: string) {

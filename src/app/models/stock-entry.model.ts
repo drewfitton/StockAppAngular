@@ -3,6 +3,7 @@ export interface StockEntry {
     ticker: string;
     company: string;
     img: string;
+    returns: number;
     date: string[];
     open: number[];
     high: number[];

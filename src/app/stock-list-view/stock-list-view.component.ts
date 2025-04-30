@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener } from '@angular/core';
 import { StockEntry } from '../models/stock-entry.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StockService } from '../services/stock.service';
@@ -45,7 +45,7 @@ export class StockListViewComponent { // implements OnInit {
   stock_names: { [key: string]: string } = {};
   selectedDate: string  = '2025-01-01';
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-  timePeriods: string[] = ["5D", "1W", "1M", "6M", "YTD", "1Y", "5Y"];
+  timePeriods: string[] = ["1W", "1M", "6M", "YTD", "1Y", "5Y"];
   selectedPeriod: string = "YTD"; // Default selected, like "1 Month"
   categoryOptions = [
     'All', 'Tech', 'Finance', 'Healthcare',
@@ -53,6 +53,13 @@ export class StockListViewComponent { // implements OnInit {
   ];
   selectedCategory: string = 'All'; // Default selected category
   dropdownOpen = false;
+  pageSize = 20;
+  currentPage = 0;
+  totalStocks = 0;
+  paginatedStocks: StockEntry[] = [];
+  loading = false;
+  chartLoading = false; 
+
 
   public chartData: ChartConfiguration<'line'>['data'] = {
     labels: [],
@@ -75,58 +82,81 @@ export class StockListViewComponent { // implements OnInit {
       },
     },
   };
-  constructor(private fb: FormBuilder, private stockService: StockService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private fb: FormBuilder, private stockService: StockService, private route: ActivatedRoute, private router: Router, private eRef: ElementRef) {}
   
   ngOnInit(): void {
-    this.loadStockData();
-    this.loadStockNames();
+    this.loadPaginatedStocks();
   }
 
-  loadStockNames(): void {
-    this.stockService.getStockNames(this.selectedCategory).subscribe({
-      next: (data: any) => {
-        this.stock_names = data;
-        this.filtered_data = this.stock_data.filter(entry => {
-          return Object.keys(this.stock_names).includes(entry.ticker);
-        });
-        console.log('Stock names:', this.stock_names);
-      },
-      error: (err: string) => {
-        console.error('Error fetching stock names:', err);
-      }
-    });
-  }
+  loadPaginatedStocks(): void {
+    this.loading = true;
+    const offset = this.currentPage * this.pageSize;
 
-  loadStockData(): void {
-    this.stockService.getStockData().subscribe({
-      next: (data: StockEntry[]) => {
-        this.stock_data = data;
-        this.filtered_data = data;
-        // console.log('Stock data:', this.stock_data[0]);
-      },
-      error: (error: string) => {
-        console.error('Error fetching stock data:', error);
-      }
-    });
+    this.stockService.getPaginatedStocks(this.selectedCategory, this.selectedDate, offset, this.pageSize)
+      .subscribe({
+        next: (response) => {
+          this.paginatedStocks = response.results.sort((a, b) => b.returns - a.returns);
+          this.totalStocks = response.total;
+          this.loading = false;
+          this.chartLoading = false; // After data is loaded, set chart loading to false
+        },
+        error: (err) => {
+          console.error('Failed to load stocks', err);
+          this.loading = false;
+          this.chartLoading = false;
+        }
+      });
   }
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
+  @ViewChild('dropdownRef') dropdownRef!: ElementRef;
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent) {
+    if (this.dropdownOpen && !this.dropdownRef.nativeElement.contains(event.target)) {
+      this.dropdownOpen = false;
+    }
+  }
+
   onSelectCategory(option: string) {
     this.selectedCategory = option;
-    this.dropdownOpen = false;
-    // You can emit this if you need to notify parent components
-    this.loadStockNames();
+    this.currentPage = 0;
+    this.loadPaginatedStocks();
   }
-
+  
   onSelectPeriod(period: string) {
     this.selectedPeriod = period;
-    console.log('Selected:', period);
-    // Optionally, fetch new data / update chart here!
     this.selectedDate = calculateStartDate(period).toISOString().split('T')[0];
-
+    this.currentPage = 0;
+    this.loadPaginatedStocks();
   }
+  
+  nextPage() {
+    if ((this.currentPage + 1) * this.pageSize < this.totalStocks) {
+      this.currentPage++;
+      this.loadPaginatedStocks();
+    }
+  }
+  
+  prevPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadPaginatedStocks();
+    }
+  }
+
+  lastPage() {
+    this.currentPage = Math.floor(this.totalStocks / this.pageSize);
+    this.loadPaginatedStocks();
+  }
+
+  firstPage() {
+    this.currentPage = 0;
+    this.loadPaginatedStocks();
+  }
+  
 
 }
