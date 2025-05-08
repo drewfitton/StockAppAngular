@@ -1,3 +1,4 @@
+
 .stock-card {
     width: 100%;
     height: 100%;
@@ -18,9 +19,11 @@
   
   .stock-chart {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
   }
   
+
+
   canvas {
     width: 100% !important;
     height: 100% !important;

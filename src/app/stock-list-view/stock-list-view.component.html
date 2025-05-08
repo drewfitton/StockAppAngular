@@ -33,6 +33,18 @@
           }
         </div>
       </div>
+      <div class="selection-section">
+        <p>Indicators</p>
+        <div class="time-period-row">
+          @for(ind of indicators; track ind) {
+            <button 
+              [class.selected]="selectedIndicators.includes(ind)"
+              (click)="onSelectIndicator(ind)">
+              {{ ind }}
+            </button>
+          }
+        </div>
+      </div>
     </div>
   </div>
   @if(loading) { 
@@ -42,7 +54,7 @@
   } @else {
     <div class="stock-list" *ngIf="stock_names">
       <div class="stock-grid">
-        @for (stock of paginatedStocks; track stock.id) {
+        @for (stock of paginatedStocks; track trackByFn) {
           <app-stock-card
           [date]="selectedDate"
           [stockEntry]="stock">

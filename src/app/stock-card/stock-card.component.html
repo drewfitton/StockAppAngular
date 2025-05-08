@@ -14,17 +14,46 @@
             }
             </div>
         </div>
-        <div class="stock-chart">
+        <div class="stock-chart" [ngClass]="{
+            'full-height': rsiChartData.datasets.length === 0 && macdChartData.datasets.length === 0,
+            'main-chart': rsiChartData.datasets.length > 0 || macdChartData.datasets.length > 0
+          }">
             <!-- stock-card.component.html -->
             <div *ngIf="loadingChart">Loading chart...</div>
             <canvas baseChart
-                    [data]="chartData"
-                    [options]="chartOptions"
+                    [data]="mainChartData"
+                    [options]="mainChartOptions"
                     [type]="'line'"
                     *ngIf="!loadingChart">
             </canvas>
 
         </div>
+        @if(rsiChartData.datasets.length > 0) {
+            <div class="stock-chart small">
+                <!-- stock-card.component.html -->
+                <div *ngIf="loadingChart">Loading chart...</div>
+                <canvas baseChart
+                        [data]="rsiChartData"
+                        [options]="rsiChartOptions"
+                        [type]="'line'"
+                        *ngIf="!loadingChart">
+                </canvas>
+
+            </div>
+        }
+        @if(macdChartData.datasets.length > 0) {
+            <div class="stock-chart small">
+                <!-- stock-card.component.html -->
+                <div *ngIf="loadingChart">Loading chart...</div>
+                <canvas baseChart
+                        [data]="macdChartData"
+                        [options]="macdChartOptions"
+                        [type]="'line'"
+                        *ngIf="!loadingChart">
+                </canvas>
+
+            </div>
+        }
     }
 </div>
   
