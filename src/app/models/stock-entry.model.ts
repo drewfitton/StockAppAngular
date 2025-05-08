@@ -4,11 +4,16 @@ export interface StockEntry {
     company: string;
     img: string;
     returns: number;
-    date: string[];
+    date: Date[];
     open: number[];
     high: number[];
     low: number[];
     close: number[];
     adj_close: number[];
+    lower_bollinger: number[] | undefined;
+    upper_bollinger: number[] | undefined;
+    rsi: number[] | undefined;
+    macd: number[] | undefined;
+    macd_signal: number[] | undefined;
     volume: number[];
 }

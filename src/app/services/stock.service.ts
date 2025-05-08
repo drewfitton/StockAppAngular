@@ -29,17 +29,22 @@ export class StockService {
   getPaginatedStocks(
     category: string,
     period: string,
+    inds: string[],
     offset: number,
     limit: number,
     sort: string = 'returns_desc'
   ): Observable<PaginatedStockResponse> {
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('category', category)
       .set('period', period)
       .set('offset', offset)
       .set('limit', limit)
       .set('sort', sort);
-  
+
+    inds.forEach(ind => {
+      params = params.append('inds', ind);
+    });
+
     return this.http.get<PaginatedStockResponse>(`${this.baseUrl}/stock/data/`, { params });
   }
   

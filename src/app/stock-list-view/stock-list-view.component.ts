@@ -52,6 +52,8 @@ export class StockListViewComponent { // implements OnInit {
     'Startups', 'Retail', 'Sports', 'Energy', 'Entertainment'
   ];
   selectedCategory: string = 'All'; // Default selected category
+  indicators: string[] = ['Bollinger', 'MACD', 'RSI'];
+  selectedIndicators: string[] = [];
   dropdownOpen = false;
   pageSize = 20;
   currentPage = 0;
@@ -88,11 +90,15 @@ export class StockListViewComponent { // implements OnInit {
     this.loadPaginatedStocks();
   }
 
+  trackByFn(index: number, item: StockEntry) {
+    return item.id; // or item.id if you have a unique identifier
+  }
+
   loadPaginatedStocks(): void {
     this.loading = true;
     const offset = this.currentPage * this.pageSize;
 
-    this.stockService.getPaginatedStocks(this.selectedCategory, this.selectedDate, offset, this.pageSize)
+    this.stockService.getPaginatedStocks(this.selectedCategory, this.selectedDate, this.selectedIndicators, offset, this.pageSize)
       .subscribe({
         next: (response) => {
           this.paginatedStocks = response.results.sort((a, b) => b.returns - a.returns);
@@ -131,6 +137,17 @@ export class StockListViewComponent { // implements OnInit {
     this.selectedPeriod = period;
     this.selectedDate = calculateStartDate(period).toISOString().split('T')[0];
     this.currentPage = 0;
+    this.loadPaginatedStocks();
+  }
+
+  onSelectIndicator(indicator: string) {
+    const index = this.selectedIndicators.indexOf(indicator);
+    if (index === -1) {
+      this.selectedIndicators.push(indicator);
+    } else {
+      this.selectedIndicators.splice(index, 1);
+    }
+    console.log('Selected Indicators:', this.selectedIndicators);
     this.loadPaginatedStocks();
   }
   
