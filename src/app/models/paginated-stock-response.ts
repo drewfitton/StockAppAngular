@@ -1,4 +1,4 @@
-import { StockEntry } from "./models/stock-entry.model";
+import { StockEntry } from "./stock-entry.model";
 
 export interface PaginatedStockResponse {
     total: number; // total number of matching stocks

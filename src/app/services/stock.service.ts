@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, tap } from 'rxjs/operators';
 import { StockEntry } from '../models/stock-entry.model';
 import { Observable } from 'rxjs';
-import { PaginatedStockResponse } from '../paginated-stock-response';
+import { PaginatedStockResponse } from '../models/paginated-stock-response';
 
 @Injectable({
   providedIn: 'root'

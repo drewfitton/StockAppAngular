@@ -4,8 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StockService } from '../services/stock.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartType } from 'chart.js';
+import { SearchInputComponent } from '../search-input/search-input.component';
 import { ViewChild } from '@angular/core';
 import { calculateStartDate } from '../utils/date-utils';
 import {
@@ -20,6 +19,7 @@ import {
   LineController
 } from 'chart.js';
 import { StockCardComponent } from '../stock-card/stock-card.component';
+import { FormsModule } from '@angular/forms';
 
 ChartJS.register(
   CategoryScale,
@@ -35,7 +35,7 @@ ChartJS.register(
 @Component({
   selector: 'app-stock-list-view',
   standalone: true,
-  imports: [CommonModule, StockCardComponent],
+  imports: [CommonModule, StockCardComponent, SearchInputComponent],
   templateUrl: './stock-list-view.component.html',
   styleUrl: './stock-list-view.component.css'
 })
@@ -44,7 +44,6 @@ export class StockListViewComponent { // implements OnInit {
   filtered_data: StockEntry[] = [];
   stock_names: { [key: string]: string } = {};
   selectedDate: string  = '2025-01-01';
-  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
   timePeriods: string[] = ["1W", "1M", "6M", "YTD", "1Y", "5Y"];
   selectedPeriod: string = "YTD"; // Default selected, like "1 Month"
   categoryOptions = [
@@ -59,39 +58,16 @@ export class StockListViewComponent { // implements OnInit {
   currentPage = 0;
   totalStocks = 0;
   paginatedStocks: StockEntry[] = [];
-  loading = false;
-  chartLoading = false; 
+  searchStocks: StockEntry[] = [];
+  loading = true;
+  chartLoading = false;
+  searchDropdownOpen = false;
 
 
-  public chartData: ChartConfiguration<'line'>['data'] = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        label: 'Adjusted Close Price',
-        fill: false,
-        borderColor: 'rgba(75,192,192,1)',
-        tension: 0.1
-      }
-    ]
-  };
-  
-  public chartOptions: ChartConfiguration<'line'>['options'] = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: true,
-      },
-    },
-  };
   constructor(private fb: FormBuilder, private stockService: StockService, private route: ActivatedRoute, private router: Router, private eRef: ElementRef) {}
   
   ngOnInit(): void {
     this.loadPaginatedStocks();
-  }
-
-  trackByFn(index: number, item: StockEntry) {
-    return item.id; // or item.id if you have a unique identifier
   }
 
   loadPaginatedStocks(): void {
@@ -104,12 +80,10 @@ export class StockListViewComponent { // implements OnInit {
           this.paginatedStocks = response.results.sort((a, b) => b.returns - a.returns);
           this.totalStocks = response.total;
           this.loading = false;
-          this.chartLoading = false; // After data is loaded, set chart loading to false
         },
         error: (err) => {
           console.error('Failed to load stocks', err);
           this.loading = false;
-          this.chartLoading = false;
         }
       });
   }
@@ -119,17 +93,24 @@ export class StockListViewComponent { // implements OnInit {
   }
 
   @ViewChild('dropdownRef') dropdownRef!: ElementRef;
+  @ViewChild('searchRef') searchRef!: ElementRef;
 
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent) {
     if (this.dropdownOpen && !this.dropdownRef.nativeElement.contains(event.target)) {
       this.dropdownOpen = false;
     }
+
+    if (this.searchDropdownOpen && !this.searchRef.nativeElement.contains(event.target)) {
+      this.searchDropdownOpen = false;
+    }
   }
+
 
   onSelectCategory(option: string) {
     this.selectedCategory = option;
     this.currentPage = 0;
+    this.dropdownOpen = false;
     this.loadPaginatedStocks();
   }
   
@@ -151,6 +132,23 @@ export class StockListViewComponent { // implements OnInit {
     this.loadPaginatedStocks();
   }
   
+
+  onTextChange(searchText: string) {
+    console.log('Search text changed:', searchText);
+    console.log('Stock data:', this.filtered_data);
+    if (searchText.length === 0) {
+      this.searchStocks = [];
+      this.searchDropdownOpen = false;
+    } else {
+      this.searchStocks = this.paginatedStocks.filter(stock =>
+        stock.ticker.toLowerCase().includes(searchText.toLowerCase()) ||
+        stock.company.toLowerCase().includes(searchText.toLowerCase())
+      );
+      this.searchDropdownOpen = true;
+    }
+  }
+
+
   nextPage() {
     if ((this.currentPage + 1) * this.pageSize < this.totalStocks) {
       this.currentPage++;

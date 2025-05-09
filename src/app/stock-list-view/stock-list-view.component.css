@@ -35,6 +35,19 @@
     padding: 1rem;
 }
 
+
+.stock-name {
+  font-weight: bold;
+}
+
+.stock-ticker {
+  color: #555;
+}
+
+.stock-returns {
+  font-weight: bold;
+}
+
 .selection-bar {
   display: flex;
   justify-content: center;
@@ -50,6 +63,7 @@
   align-items: center;
   flex-direction: row;
   gap: 0.5rem;
+  position: relative;
 }
 
 .time-period-row {

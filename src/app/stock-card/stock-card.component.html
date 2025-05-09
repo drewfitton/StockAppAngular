@@ -5,13 +5,21 @@
                 <h1>{{ stockEntry.ticker }}</h1>
                 <img src="{{stockEntry.img}}" alt=""/>
             </div>
-            <div class="row">
-                <p>{{stockEntry.company}}</p>
-            @if (stockEntry.returns) {
-                <p [style.color]="stockEntry.returns > 0 ? 'green' : (stockEntry.returns < 0 ? 'red' : 'black')">
-                    {{ stockEntry.returns > 0 ? '+' + stockEntry.returns : stockEntry.returns }}%
-                </p>
-            }
+            <div class="small-row">
+                <div class="stock-info">
+                    <p class="company">{{stockEntry.company}}</p>
+                    @if (stockEntry.returns) {
+                        <p [style.color]="stockEntry.returns > 0 ? 'green' : (stockEntry.returns < 0 ? 'red' : 'black')">
+                            {{ stockEntry.returns > 0 ? '+' + stockEntry.returns : stockEntry.returns }}%
+                        </p>
+                    }
+                </div>
+                <div class="custom-legend">
+                    <div *ngFor="let item of legendItems" class="legend-item">
+                      <span class="legend-color-box" [style.backgroundColor]="item.color"></span>
+                      <span class="legend-label">{{ item.label }}</span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="stock-chart" [ngClass]="{

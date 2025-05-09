@@ -14,19 +14,24 @@
   }
   
   .stock-card:hover {
-    transform: scale(1.02); /* slight zoom on hover */ 
+    transform: scale(1.02); 
   }
   
   .stock-chart {
     width: 100%;
-    /* height: 100%; */
   }
-  
 
+  .stock-chart.main-chart {
+      min-height: 14rem; 
+  }
+
+  .stock-chart.small {
+      min-height: 7rem; 
+  }
 
   canvas {
     width: 100% !important;
-    height: 100% !important;
+    /* height: 100% !important; */
     border-radius: 1rem; /* optional if you want canvas to also have rounded edges */
   }
   
@@ -35,7 +40,11 @@
     size: 2rem;
   }
 
-  div .row {
+  .company {
+    white-space: nowrap;
+  }
+
+  .row {
     margin: 0;
     padding: 0.1rem;
     display: flex;
@@ -43,9 +52,61 @@
     align-items: center;
     flex-direction: row;
     gap: 0.5rem;
+    min-height: 1.25rem;
+  }
+
+  .small-row {
+    margin: 0;
+    width: 100%;
+    padding: 0.1rem;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.5rem;
+    min-height: 1.25rem;
+  }
+
+  .stock-info {
+    margin: 0;
+    padding: 0.1rem;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.5rem;
+    min-height: 1.25rem;
+  }
+
+  .custom-legend {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 0.75rem;
+    padding: 0.1rem;
+    min-height: 1.25rem;
+  }
+
+  .legend-label {
+    color: white;
+    font-size: 0.75rem;
+    /* font-weight: 500; */
+  }
+
+  .legend-color-box {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    margin-right: 2px;
+    border-radius: 2px;
+    /* border: 1px solid #ccc; */
   }
 
   div .stock-card-header {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: left;
@@ -53,6 +114,7 @@
     margin: 0;
     padding: 0;
     gap: 0.25rem;
+    min-height: 2.5rem;
   }
 
   img {
