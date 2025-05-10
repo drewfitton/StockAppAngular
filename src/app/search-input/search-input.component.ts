@@ -38,6 +38,12 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   }
 
   onInput(e: any) {
-    this.inputValue.next(e.target.value);
+    this.initialValue = e.target.value;
+    this.inputValue.next(this.initialValue);
+  }
+
+  reset() {
+    this.initialValue = '';
+    this.inputValue.next('');
   }
 }

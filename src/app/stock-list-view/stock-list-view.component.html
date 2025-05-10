@@ -3,9 +3,9 @@
     <h1>Stock Performance</h1>
     <div class="selection-bar">
       <div class="selection-section">
-        <div class="dropdown" #searchRef>
-          <app-search-input (textChange)="onTextChange($event)"></app-search-input>
-          <div class="dropdown-menu" *ngIf="searchStocks.length > 0 && searchDropdownOpen">
+        <div class="search-dropdown" #searchRef>
+          <app-search-input #searchInput (textChange)="onTextChange($event)"></app-search-input>
+          <div class="search-dropdown-menu" *ngIf="searchStocks.length > 0 && searchDropdownOpen">
             <button *ngFor="let stock of searchStocks">
               <span class="stock-name">{{ stock.company }}</span>
               <span class="stock-ticker">{{ stock.ticker }}</span>

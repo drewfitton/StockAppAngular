@@ -88,7 +88,7 @@
 
 
 .time-period-row button:hover {
-  background-color: #777;
+  background-color: rgba(34, 34, 34);
 }
 
 .time-period-row button.selected {
@@ -121,7 +121,7 @@
 }
 
 .dropdown > button:hover {
-  background-color: #777;
+  background-color: rgba(34, 34, 34);
 }
 
 .dropdown > button.selected {
@@ -155,12 +155,75 @@
 }
 
 .dropdown-menu button:hover {
-  background-color: #777;
+  background-color: rgba(34, 34, 34);
 }
 
 .dropdown-menu button.selected {
   background-color: #007AFF;
   color: black;
+}
+
+
+.search-dropdown-menu {
+  position: absolute;
+  top: 100%; /* make sure it's flush with the search input */
+  left: 0;
+  background-color: rgba(34, 34, 34, 0.95); /* dark translucent */
+  border: 1px solid #222;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  width: 100%;
+}
+
+.search-dropdown-menu button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-top: 1px solid #444;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-dropdown-menu button:first-child{
+  border-top: 2px solid #444; /* Remove top border for the first button */
+}
+
+.search-dropdown-menu button:hover {
+  background-color: #007AFF;;
+}
+
+.stock-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.stock-name {
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stock-ticker {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.stock-returns {
+  font-weight: bold;
+  min-width: 60px;
+  text-align: right;
+  white-space: nowrap;
 }
 
 
@@ -194,7 +257,7 @@
 }
 
 .pagination-button:hover {
-  background-color: #777;
+  background-color: rgba(34, 34, 34);
 }
 
 .pagination-button:disabled {

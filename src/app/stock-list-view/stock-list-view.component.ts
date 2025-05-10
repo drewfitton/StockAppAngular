@@ -94,6 +94,8 @@ export class StockListViewComponent { // implements OnInit {
 
   @ViewChild('dropdownRef') dropdownRef!: ElementRef;
   @ViewChild('searchRef') searchRef!: ElementRef;
+  @ViewChild('searchInput') searchInput!: SearchInputComponent; // <-- Add this
+
 
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent) {
@@ -103,6 +105,8 @@ export class StockListViewComponent { // implements OnInit {
 
     if (this.searchDropdownOpen && !this.searchRef.nativeElement.contains(event.target)) {
       this.searchDropdownOpen = false;
+      this.searchStocks = [];
+      this.searchInput.reset();
     }
   }
 
