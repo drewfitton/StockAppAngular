@@ -1,0 +1,7 @@
+<div class="search-input" [class.notempty]="initialValue != ''">
+    <img src="search-icon.png" alt="Search Icon" class="search-icon">
+    <input type="text"
+       placeholder="Search stock or ticker"
+       [value]="initialValue"
+       (input)="onInput($event)">
+</div>
