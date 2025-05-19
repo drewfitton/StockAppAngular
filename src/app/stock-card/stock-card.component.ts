@@ -44,6 +44,7 @@ Chart.register(
 export class StockCardComponent {
   @Input() date: string | null = "2025-01-01";
   @Input() stockEntry: StockEntry | null = null;
+  @Input() selectedInds: string[] = [];
   @Output() stockSelected = new EventEmitter<StockEntry>();
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
   stock_entry: StockEntry | null = null;
@@ -130,7 +131,8 @@ export class StockCardComponent {
       ];
   
       const upper = this.stockEntry.upper_bollinger;
-      if (upper && upper.length > 0) {
+      const lower = this.stockEntry.lower_bollinger;
+      if (this.selectedInds.includes("Bollinger") && upper && upper.length > 0 && lower && lower.length > 0) {
         datasets.push({
           data: upper,
           label: 'Upper Bollinger Band',
@@ -142,10 +144,6 @@ export class StockCardComponent {
           pointHoverRadius: 5,     // show on hover
           pointHitRadius: 10,  
         });
-      }
-  
-      const lower = this.stockEntry.lower_bollinger;
-      if (lower && lower.length > 0) {
         datasets.push({
           data: lower,
           label: 'Lower Bollinger Band',
@@ -162,7 +160,7 @@ export class StockCardComponent {
       this.mainChartData.datasets = datasets;
 
       const rsi = this.stockEntry.rsi;
-      if (rsi && rsi.length > 0) {
+      if (this.selectedInds.includes('RSI') && rsi && rsi.length > 0) {
         rsi_pres = true;
         const rsi_dataset = [{
           data: rsi,
@@ -181,7 +179,7 @@ export class StockCardComponent {
 
       const macd = this.stockEntry.macd;
       const macd_signal = this.stockEntry.macd_signal;
-      if (macd && macd.length > 0 && macd_signal && macd_signal.length > 0) {
+      if (this.selectedInds.includes('MACD') && macd && macd.length > 0 && macd_signal && macd_signal.length > 0) {
         macd_pres = true;
         const macd_dataset: ChartDataset<'line'>[] = [
           {
@@ -227,11 +225,8 @@ export class StockCardComponent {
       }
 
       this.legendItems.push({ label: 'Adjusted Close', color: this.getBorderColor() });
-      if (upper && upper.length > 0) {
+      if (this.selectedInds.includes("Bollinger")) {
         this.legendItems.push({ label: 'Upper Bollinger', color: 'rgba(255,99,132,1)' });
-      }
-      
-      if (lower && lower.length > 0) {
         this.legendItems.push({ label: 'Lower Bollinger', color: 'rgba(54,162,235,1)' });
       }
       
@@ -279,6 +274,9 @@ export class StockCardComponent {
           type: 'time',
           time: {
             unit: 'day',
+            displayFormats: {
+              day: 'MMM d yy',  // This will display as "May 2 2025"
+            },
           },
           ticks: {
             display: showXAxis,
@@ -286,7 +284,11 @@ export class StockCardComponent {
           },
         },
         y: {
-          ticks: { display: true },
+          ticks: { 
+            callback: function (value) {
+              return value.toString().padStart(5, ' '); // e.g., '  100' to match label width
+            },
+            display: true },
           grid: { display: true }
         }
       }

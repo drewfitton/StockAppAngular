@@ -4,6 +4,7 @@ import { map, tap } from 'rxjs/operators';
 import { StockEntry } from '../models/stock-entry.model';
 import { Observable } from 'rxjs';
 import { PaginatedStockResponse } from '../models/paginated-stock-response';
+import { StockReturnsResponse } from '../models/stock-returns-response';
 
 @Injectable({
   providedIn: 'root'
@@ -25,10 +26,19 @@ export class StockService {
     const url = `${this.baseUrl}/stock/data`;
     return this.http.get<any>(url)
   }
+
+  getStockReturns(category: string, period: string): Observable<StockReturnsResponse> {
+    let params = new HttpParams()
+      .set('category', category)
+      .set('period', period);
+
+    return this.http.get<StockReturnsResponse>(`${this.baseUrl}/stock/all_returns/`, { params })
+  }
   
   getPaginatedStocks(
     category: string,
     period: string,
+    returns_period: string,
     inds: string[],
     offset: number,
     limit: number,
@@ -37,6 +47,7 @@ export class StockService {
     let params = new HttpParams()
       .set('category', category)
       .set('period', period)
+      .set('returns_period', returns_period)
       .set('offset', offset)
       .set('limit', limit)
       .set('sort', sort);

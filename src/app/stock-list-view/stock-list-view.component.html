@@ -62,6 +62,32 @@
           }
         </div>
       </div>
+      <div class="selection-section">
+        <p>Sort</p>
+        <div class="dropdown" #dropdownRef>
+          <button (click)="toggleSortDropdown()" [class.selected]="sortDropdownOpen">
+            {{ selectedSort }}
+            <span class="arrow" [class.open]="sortDropdownOpen" [innerHTML]="sortDropdownOpen ? '&#9662;' : '&#9656;'"></span>
+
+          </button>
+          <div class="dropdown-menu" *ngIf="sortDropdownOpen">
+            <button 
+              *ngFor="let option of sortOptions" 
+              (click)="onSelectSort(option)"
+              [class.selected]="option === selectedSort"
+            >
+              {{ option }}
+            </button>
+          </div>
+        </div>
+        <button (click)="toggleSort()" class="sort-button">
+          <img
+            [src]="sortDir.endsWith('desc') ? 'arrow_desc.png' : 'arrow_asc.png'"
+            class="sort-icon"
+            alt="Sort Direction"
+          />
+        </button>
+      </div>
     </div>
   </div>
   @if(loading) { 
@@ -74,7 +100,8 @@
         @for (stock of paginatedStocks; track stock.id) {
           <app-stock-card
           [date]="selectedDate"
-          [stockEntry]="stock">
+          [stockEntry]="stock"
+          [selectedInds]="selectedIndicators">
         </app-stock-card>
         }
       </div>
