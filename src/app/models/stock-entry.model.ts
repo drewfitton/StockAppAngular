@@ -4,6 +4,7 @@ export interface StockEntry {
     company: string;
     img: string;
     returns: number;
+    ml_ind: number;
     date: Date[];
     open: number[];
     high: number[];

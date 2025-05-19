@@ -4,6 +4,8 @@
             <div class="row">
                 <h1>{{ stockEntry.ticker }}</h1>
                 <img src="{{stockEntry.img}}" alt=""/>
+                <h2 [style.color]="stockEntry.returns > 0 ? 'green' : (stockEntry.returns < 0 ? 'red' : 'black')">${{ stockEntry.adj_close[stockEntry.adj_close.length - 1] | number: '1.2-2' }}</h2>
+                <h1>{{ stockEntry.ml_ind }}</h1>
             </div>
             <div class="small-row">
                 <div class="stock-info">
@@ -13,12 +15,6 @@
                             {{ stockEntry.returns > 0 ? '+' + stockEntry.returns : stockEntry.returns }}%
                         </p>
                     }
-                </div>
-                <div class="custom-legend">
-                    <div *ngFor="let item of legendItems" class="legend-item">
-                      <span class="legend-color-box" [style.backgroundColor]="item.color"></span>
-                      <span class="legend-label">{{ item.label }}</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -62,6 +58,12 @@
 
             </div>
         }
+        <div class="custom-legend">
+            <div *ngFor="let item of legendItems" class="legend-item">
+              <span class="legend-color-box" [style.backgroundColor]="item.color"></span>
+              <span class="legend-label">{{ item.label }}</span>
+            </div>
+        </div>
     }
 </div>
   
