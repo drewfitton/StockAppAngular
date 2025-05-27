@@ -119,6 +119,64 @@
     min-height: 2.5rem;
   }
 
+  .stock-header-top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .model-outlook {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    flex-direction: row;
+    /* margin-top: 0.5rem; */
+  }
+
+  .tooltip-container {
+    position: relative;
+    display: inline-block;
+    margin-left: 2px;
+    vertical-align: middle;
+  }
+  
+  .question-icon {
+    background-color: transparent;
+    filter: invert(100%);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    
+  }
+  
+  .tooltip-text {
+    visibility: hidden;
+    width: 220px;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    padding: 8px;
+    border-radius: 4px;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.75rem;
+    white-space: normal;
+  }
+  
+  .tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+
   img {
     /* width: 50px; */
     height: 2.25rem;

@@ -110,6 +110,20 @@ export class StockCardComponent {
     this.router.navigate(['/stock-details'], { queryParams: { stockName: stock.ticker } });
   }
   
+  roundMLInd(mlInd: number): number {
+    return Math.round((mlInd / 0.5) * 10 * 100) / 100;
+  }
+
+  getColorFromScore(score: number): string {
+    // Clamp score between -5 and 5 (or your own min/max range)
+    const clamped = Math.max(-5, Math.min(5, score));
+  
+    // Map from red (0°) to green (120°) in HSL
+    const hue = ((clamped + 2) / 10) * 120;
+  
+    return `hsl(${hue}, 100%, 50%)`;  // Full saturation, normal brightness
+  }
+  
 
   loadData() {
     if (this.stockEntry) {
