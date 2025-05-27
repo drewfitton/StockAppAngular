@@ -1,11 +1,23 @@
 <div class='stock-card'>
     @if (stockEntry != null) {
         <div class="stock-card-header">
-            <div class="row">
-                <h1>{{ stockEntry.ticker }}</h1>
-                <img src="{{stockEntry.img}}" alt=""/>
-                <h2 [style.color]="stockEntry.returns > 0 ? 'green' : (stockEntry.returns < 0 ? 'red' : 'black')">${{ stockEntry.adj_close[stockEntry.adj_close.length - 1] | number: '1.2-2' }}</h2>
-                <h1>{{ stockEntry.ml_ind }}</h1>
+            <div class="stock-header-top">
+                <div class="row">
+                    <h1>{{ stockEntry.ticker }}</h1>
+                    <img src="{{stockEntry.img}}" alt=""/>
+                    <h2 [style.color]="stockEntry.returns > 0 ? 'green' : (stockEntry.returns < 0 ? 'red' : 'black')">${{ stockEntry.adj_close[stockEntry.adj_close.length - 1] | number: '1.2-2' }}</h2>
+                </div>
+                <div class="model-outlook">
+                    <h2 [style.color]="getColorFromScore(roundMLInd(stockEntry.ml_ind))">{{ roundMLInd(stockEntry.ml_ind) }}</h2>
+                    <span class="tooltip-container">
+                        <img src="question.png" alt="Info" class="question-icon" />
+                        <span class="tooltip-text">
+                          ML Model Bullishness Indicator:
+                            <br>
+                            Positive indicates a bullish outlook, negative indicates a bearish outlook.
+                        </span>
+                      </span>
+                </div>
             </div>
             <div class="small-row">
                 <div class="stock-info">
